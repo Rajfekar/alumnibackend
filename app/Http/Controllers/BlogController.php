@@ -9,10 +9,30 @@ use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
+
+    public function getBlogById($id)
+    {
+        $blog = Blog::where('id', $id)->first();
+
+        if (!$blog) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Blog not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $blog,
+        ]);
+    }
+
     // Create a new blog
+
     public function createBlog(BlogRequest $request)
     {
         $validatedData = $request->validated();
+
         if ($validatedData['image']) {
             $image = $request->file('image');
             $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
@@ -36,7 +56,7 @@ class BlogController extends Controller
     // Retrieve a blog by its ID
     public function getBlog()
     {
-        $blog = Blog::get();
+        $blog = Blog::with('user')->paginate(50);
 
         if (!$blog) {
             return response()->json([
@@ -52,7 +72,7 @@ class BlogController extends Controller
     }
 
     // Update an existing blog
-    public function updateBlog(Request $request, $id)
+    public function updateBlog(BlogRequest $request, $id)
     {
         $blog = Blog::find($id);
 
@@ -63,13 +83,17 @@ class BlogController extends Controller
             ], 404);
         }
 
-        $validatedData = $request->validate([
-            'image' => 'nullable|string|max:255',
-            'title' => 'nullable|string|max:255',
-            'date' => 'nullable|date',
-            'description' => 'nullable|string',
-            'user_id' => 'nullable|exists:users,id',
-        ]);
+        $validatedData = $request->validated();
+
+        if ($validatedData['image']) {
+            $image = $request->file('image');
+            $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $timestamp = now()->timestamp;
+            $extension = $image->getClientOriginalExtension();
+            $newName = 'blog' . '_' . $timestamp . '.' . $extension;
+            $imagePath = $image->storeAs('blogs', $newName, 'public');
+            $validatedData['image'] = $newName;
+        }
 
         // Update the blog with validated data
         $blog->update($validatedData);

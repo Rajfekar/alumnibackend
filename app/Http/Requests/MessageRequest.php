@@ -6,7 +6,7 @@ use App\Http\Helpers\Helper;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BlogRequest extends FormRequest
+class MessageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,6 @@ class BlogRequest extends FormRequest
     {
         return true;
     }
-
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,11 +25,9 @@ class BlogRequest extends FormRequest
     {
 
         return [
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'date' => 'required|date',
-            'description' => 'required|string',
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'message' => 'required|max:2000',
         ];
     }
 
@@ -43,15 +40,5 @@ class BlogRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         Helper::sendError('validation error', $validator->errors());
-    }
-
-
-    /**
-     * Return validated data as role_id.
-     */
-    public function validated($key = null, $default = null)
-    {
-        $validatedData = parent::validated();
-        return $validatedData;
     }
 }

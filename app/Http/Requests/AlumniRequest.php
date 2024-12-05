@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Helpers\Helper;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 
 class AlumniRequest extends FormRequest
 {
@@ -31,6 +32,7 @@ class AlumniRequest extends FormRequest
             'company' => 'nullable|string|max:255',
             'designation' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
+            'password' => 'max:20,min:5',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
         ];
     }
@@ -50,6 +52,11 @@ class AlumniRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validatedData = parent::validated();
+        if ($validatedData['password']) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        } else {
+            $validatedData['password'] = Hash::make("12345678");
+        }
         return $validatedData;
     }
 }

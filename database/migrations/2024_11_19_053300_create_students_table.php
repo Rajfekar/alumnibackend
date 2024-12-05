@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('linkedin')->nullable();
             $table->string('instagram')->nullable();
             $table->string('image')->nullable();
+            $table->string('password')->nullable();
             $table->tinyInteger('isVerified')->default(0);
             $table->timestamps();
         });
