@@ -34,23 +34,25 @@ class AlumniController extends Controller
     }
 
     // Retrieve all alumni
-    public function getAlumni()
+    public function getAlumni(Request $request)
     {
-        $students = Student::all();
-
+        $query = Student::query();
+        if ($request->searchTerm) {
+            $query->where('name', 'like', '%' . $request->searchTerm . '%');
+        }
         return response()->json([
             'success' => true,
-            'data' => $students,
+            'data' => $query->get(),
         ]);
     }
 
     // Update alumni details
     public function updateAlumni(StudentRequest $request, $id)
     {
+
         $student = Student::find($id);
 
         if (!$student) {
-
             return response()->json([
                 'success' => false,
                 'message' => 'Alumni not found',

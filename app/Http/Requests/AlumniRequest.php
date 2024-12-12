@@ -52,6 +52,7 @@ class AlumniRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validatedData = parent::validated();
+
         if ($validatedData['password']) {
             $validatedData['password'] = Hash::make($validatedData['password']);
         } else {
