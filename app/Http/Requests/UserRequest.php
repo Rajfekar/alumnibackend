@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:8048',
             'password' => 'nullable|max:50|min:8'
         ];
     }

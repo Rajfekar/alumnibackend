@@ -33,7 +33,7 @@ class AlumniRequest extends FormRequest
             'designation' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'password' => 'max:20,min:5',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5048',
         ];
     }
 
