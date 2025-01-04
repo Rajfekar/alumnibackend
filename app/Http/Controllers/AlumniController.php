@@ -14,7 +14,7 @@ class AlumniController extends Controller
     {
         $validatedData = $request->validated();
 
-        if ($validatedData['image']) {
+        if (isset($validatedData['image'])) {
             $image = $request->file('image');
             $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
             $timestamp = now()->timestamp;
@@ -22,6 +22,8 @@ class AlumniController extends Controller
             $newName = 'student' . '_' . $timestamp . '.' . $extension;
             $imagePath = $image->storeAs('students', $newName, 'public');
             $validatedData['image'] = $newName;
+        } else {
+            $validatedData['image'] = "default.jpg";
         }
 
         $student = Student::create($validatedData);
@@ -47,6 +49,7 @@ class AlumniController extends Controller
         if ($request->searchTerm) {
             $query->where('name', 'like', '%' . $request->searchTerm . '%');
         }
+        $query->orderBy("id", 'DESC');
         return response()->json([
             'success' => true,
             'data' => $query->get(),
