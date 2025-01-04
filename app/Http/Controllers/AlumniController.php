@@ -25,12 +25,19 @@ class AlumniController extends Controller
         }
 
         $student = Student::create($validatedData);
+        if ($student) {
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Alumni registered successfully',
-            'data' => $student,
-        ], 201);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Alumni registered successfully',
+                'data' => $student,
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Failed to register alumni',
+            ], 500);
+        }
     }
 
     // Retrieve all alumni

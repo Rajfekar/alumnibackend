@@ -33,7 +33,7 @@ class AlumniRequest extends FormRequest
             'designation' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'password' => 'max:20,min:5',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:4000',
         ];
     }
 
@@ -52,12 +52,12 @@ class AlumniRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validatedData = parent::validated();
-
-        if ($validatedData['password']) {
+        if (isset($validatedData['password'])) {
             $validatedData['password'] = Hash::make($validatedData['password']);
         } else {
             $validatedData['password'] = Hash::make("12345678");
         }
+
         return $validatedData;
     }
 }
