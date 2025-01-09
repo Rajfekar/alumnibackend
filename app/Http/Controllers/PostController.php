@@ -24,7 +24,6 @@ class PostController extends Controller
             $validatedData['image'] = $newName;
         }
 
-        // Create the post
         $post = Post::create($validatedData);
 
         return response()->json([

@@ -29,6 +29,7 @@ class PostRequest extends FormRequest
             'date' => 'required|date',
             'description' => 'required|string',
             'student_id' => 'required|exists:students,id',
+            'status' => 'max:2'
         ];
     }
 
@@ -50,6 +51,10 @@ class PostRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $validatedData = parent::validated();
+
+        if (!isset($validatedData['status'])) {
+            $validatedData['status'] = 0;
+        }
         return $validatedData;
     }
 }

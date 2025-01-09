@@ -35,6 +35,7 @@ Route::controller(StudentAuthController::class)->group(function () {
 Route::controller(AlumniController::class)->group(function () {
     Route::post('/register-alumni', 'registerAlumni');
     Route::get('/get-alumni', 'getAlumni');
+    Route::get('/get-alumnis', 'getAlumnis');
     Route::delete('/delete-alumni/{id}', 'deleteAlumni');
     Route::post('/update-alumni/{id}', 'updateAlumni');
 });

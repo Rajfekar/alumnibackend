@@ -6,10 +6,40 @@ use App\Http\Requests\AlumniRequest;
 use App\Http\Requests\StudentRequest;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class AlumniController extends Controller
 {
+
     // Create a new alumni (register)
+    public function getAlumnis(Request $request)
+    {
+        $query = Student::query();
+
+        if ($request->orderField && $request->order) {
+            $query->orderBy($request->orderField, $request->order);
+        }
+        if ($request->searchTerm) {
+            $query->where('name', 'like', '%' . $request->searchTerm . '%');
+        }
+
+        try {
+            $students = $query->paginate($request->per_page ?? 5);
+            return Response::json([
+                'status' => 200,
+                'message' => 'Student Fetch Successfully.',
+                'data' => $students
+            ]);
+        } catch (\Throwable $th) {
+
+            return Response::json([
+                'status' => 501,
+                'message' => 'Something Went Wrong!',
+                'data' => $th
+            ]);
+        }
+    }
+
     public function registerAlumni(AlumniRequest $request)
     {
         $validatedData = $request->validated();
@@ -27,8 +57,8 @@ class AlumniController extends Controller
         }
 
         $student = Student::create($validatedData);
-        if ($student) {
 
+        if ($student) {
             return response()->json([
                 'status' => 200,
                 'message' => 'Alumni registered successfully',
@@ -46,6 +76,9 @@ class AlumniController extends Controller
     public function getAlumni(Request $request)
     {
         $query = Student::query();
+
+        if ($request->per_page) {
+        }
         if ($request->searchTerm) {
             $query->where('name', 'like', '%' . $request->searchTerm . '%');
         }
